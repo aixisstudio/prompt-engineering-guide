@@ -32,4 +32,15 @@ Give the model retrieval + functions instead of hoping it knows — the single b
 - **Vague goals** → vague output
 - **Conflicting instructions** → the model picks one silently
 - **Asking for certainty** on uncertain topics → hallucinations; prefer "say when you don't know"
-- **Prompt injection** — never conca
+- **Prompt injection** — never concatenate untrusted user text into system prompts
+
+## 📚 References
+- Anthropic prompt guide · OpenAI cookbook · dair-ai Prompt Engineering Guide
+- Practice: `ai-prompts-hub` (this org) — add & browse real prompts
+
+## 🧬 Advanced patterns
+
+### Chain-of-Verification (CoVe)
+1. Draft answer → 2. Generate verification questions → 3. Answer them independently → 4. Revise. Cuts hallucination dramatically.
+
+#
