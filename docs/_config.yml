@@ -1,0 +1,6 @@
+remote_theme: pages-themes/cayman@v0.2.0
+plugins:
+  - jekyll-remote-theme
+title: Prompt Engineering Guide
+description: Prompt engineering, from zero to advanced techniques
+show_downloads: false
