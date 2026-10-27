@@ -42,6 +42,36 @@ Give the model retrieval + functions instead of hoping it knows — the single b
 - Anthropic prompt guide · OpenAI cookbook · dair-ai Prompt Engineering Guide
 - Practice: `ai-prompts-hub` (this org) — add & browse real prompts
 
+## 🧬 Advanced patterns
+
+### Chain-of-Verification (CoVe)
+1. Draft answer → 2. Generate verification questions → 3. Answer them independently → 4. Revise. Cuts hallucination dramatically.
+
+### Self-consistency
+Sample the same CoT prompt 5-10× at temperature 0.7, majority-vote the answer. +10-20% on reasoning benchmarks.
+
+### ReAct (Reason + Act)
+Interleave `Thought:` / `Action:` / `Observation:` — the backbone of tool-using agents.
+
+### Skeleton-of-Thought
+First generate an outline, then answer each point *in parallel*. Faster + more structured.
+
+## 📏 Benchmarks worth knowing
+
+| Benchmark | Tests |
+|---|---|
+| MMLU / MMLU-Pro | Broad knowledge |
+| HumanEval / SWE-bench | Coding |
+| GSM8K / MATH | Reasoning |
+| IF-Eval | Instruction following |
+| EQ-Bench | Emotional intelligence |
+
+## ⚠️ Prompt-injection primer
+
+- User input is never trusted context — delimit + instruct the model
+- Tools/RAG content can carry instructions: treat retrieved text as untrusted
+- Defense-in-depth: output validation > prompt hardening
+
 ---
 ## Contribuir
 
