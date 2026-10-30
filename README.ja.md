@@ -4,73 +4,71 @@
 
 プロンプトエンジニアリング入門から上級まで
 
-_詳細なコンテンツ（リスト・リンク・説明）は保守のため英語です。以下のセクションがガイドになります。_
+## 限界レベル
 
-## 🎯 Levels
+##1. 明確な指示
+悪い: 「犬について何かを書いてください。」 → グッド: 「獣医のウェブサイトが麻酔の所有者を安心させるための150ワードの段落を書いてください。」
 
-### 1. Clear instructions
-Bad: "Write something about dogs." → Good: "Write a 150-word paragraph for a vet's website reassuring owners about anesthesia."
+##2. ツイート
+実際の入力の前に2-3の入力/出力例 — パターンを模倣するモデル。
 
-### 2. Few-shot
-Give 2-3 input/output examples before your real input — the model mimics the pattern.
+##3.ペルソナ+コンテキスト
+「あなたはポストモレテをレビューするシニアSREです...」フレームスタイル、深さと語彙。
 
-### 3. Persona + context
-"You are a senior SRE reviewing a postmortem…" frames style, depth and vocabulary.
+##4. 構造と区画
+XML-ish タグ (`<context>…</context>`, `<task>…</task>`) — それらを確実に解析するモデル。
 
-### 4. Structure & delimiters
-Use XML-ish tags (`<context>…</context>`, `<task>…</task>`) — models parse them reliably.
+##5。 鎖の求め
+「ステップバイステップで考える」 – またはそれ以上: 明示的に *plan に最初に依頼し、回答*.
 
-### 5. Chain-of-thought
-"Think step by step" — or better: explicitly ask to *plan first, then answer*.
+##6. 制約された出力
+フォーマットを指定する:JSONスキーマ、マークダウンテーブル、正確な長さ。 プログラム的に確認します。
 
-### 6. Constrained output
-Specify format: JSON schema, markdown table, exact length. Verify programmatically.
+##7. 自作ループ
+「ドラフト → ドラフト → 最終作製」 1つの余分ステップ、大きい質のジャンプ。
 
-### 7. Self-critique loop
-"Draft → critique your draft → produce final." One extra step, big quality jump.
+##8. ツールの使用とRAG
+モデルの検索 + 関数をホッピングではなく、知っている - 単一の最大の信頼性レバー.
 
-### 8. Tool use & RAG
-Give the model retrieval + functions instead of hoping it knows — the single biggest reliability lever.
+## ⚠️ 失敗モード
+- **Vagueの目的** → vagueの出力
+-**Conflicting命令** →モデルは静かに1つを選ぶ
+- **確実性のために** 不確実なトピック → 幻覚; 好みます "わからないときのセイ"
+- **プロンプトインジェクション** — 信頼できないユーザテキストをシステムプロンプトに連結しません
 
-## ⚠️ Failure modes
-- **Vague goals** → vague output
-- **Conflicting instructions** → the model picks one silently
-- **Asking for certainty** on uncertain topics → hallucinations; prefer "say when you don't know"
-- **Prompt injection** — never concatenate untrusted user text into system prompts
+## ドキュメント
+- 人類のプロンプトガイド・OpenAIの料理本・dair-aiのプロンプト工学ガイド
+- 練習: `ai-prompts-hub` (このorg) — 実際のプロンプトを追加&参照
 
-## 📚 References
-- Anthropic prompt guide · OpenAI cookbook · dair-ai Prompt Engineering Guide
-- Practice: `ai-prompts-hub` (this org) — add & browse real prompts
+## 🧬 高度なパターン
 
-## 🧬 Advanced patterns
+##チェーン認証(CoVe)
+1. ドラフトの答え → 2. 検証の質問を生成 → 3. 独自に回答 → 4. お問い合わせ 幻覚を劇的にカット。
 
-### Chain-of-Verification (CoVe)
-1. Draft answer → 2. Generate verification questions → 3. Answer them independently → 4. Revise. Cuts hallucination dramatically.
+### 自己一貫性
+温度 0.7 で同じ CoT プロンプト 5-10× のサンプル, 過半投票の答え. +10-20% 理由のベンチマーク.
 
-### Self-consistency
-Sample the same CoT prompt 5-10× at temperature 0.7, majority-vote the answer. +10-20% on reasoning benchmarks.
+##ReAct(理由+行動)
+インターリーブ`Thought:` / `Action:` / `Observation:` — ツールを使用するエージェントのバックボーン。
 
-### ReAct (Reason + Act)
-Interleave `Thought:` / `Action:` / `Observation:` — the backbone of tool-using agents.
+##Skeleton-of-Thought #####Skeleton-of-Thought ########Skeleton-of-Thought#################Skeleton-of-Thought############################################################################################################################################################################################
+まず、アウトラインを生成し、各ポイント*in並列*に応答します。 より速く、より構造化される。
 
-### Skeleton-of-Thought
-First generate an outline, then answer each point *in parallel*. Faster + more structured.
+## ベンチマークを知る価値
 
-## 📏 Benchmarks worth knowing
-
-| Benchmark | Tests |
+| ベンチマーク | テスト |
 |---|---|
-| MMLU / MMLU-Pro | Broad knowledge |
-| HumanEval / SWE-bench | Coding |
-| GSM8K / MATH | Reasoning |
-| IF-Eval | Instruction following |
-| EQ-Bench | Emotional intelligence |
+| MMLU / MMLU-Pro | 幅広い知識 |
+| ヒューマンイーバル / SWEベンチ | コーディング |
+| GSM8K / MATH | 理由 |
+| IF-Eval | 下記の注意事項 |
+| EQベンチ | 感情的知能 |
 
-## ⚠️ Prompt-injection primer
+## ⚠️ プロンプト注入プライマー
 
-- User input is never trusted context — delimit + instruct the model
-- Tools/RAG content can carry instructions: treat retrieved text as untrusted
-- Defense-in-depth: output validation > prompt hardening
+- ユーザーの入力は決して信頼される文脈であり、+モデルを指示します
+- ツール/ RAG コンテンツは、指示を運ぶことができます: 信頼できるテキストを扱います
+- 防衛深さ: 出力検証 > プロンプト硬化
 
 ---
 ## 貢献
