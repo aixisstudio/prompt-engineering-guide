@@ -4,73 +4,71 @@
 
 Prompt engineering, de zéro aux techniques avancées
 
-_Le contenu détaillé (listes, liens, descriptions) est en anglais pour rester maintenable — les sections ci-dessous te guident._
+Niveau
 
-## 🎯 Levels
+1. Effacer les instructions
+Mauvais : "Écris quelque chose sur les chiens." → Bon : "Écris un paragraphe de 150 mots pour le site d'un vétérinaire rassurant les propriétaires sur l'anesthésie."
 
-### 1. Clear instructions
-Bad: "Write something about dogs." → Good: "Write a 150-word paragraph for a vet's website reassuring owners about anesthesia."
+Quelques photos
+Donnez 2-3 exemples d'entrée/sortie avant votre entrée réelle — le modèle imite le modèle.
 
-### 2. Few-shot
-Give 2-3 input/output examples before your real input — the model mimics the pattern.
+3. Persona + contexte
+"Vous êtes un SRE senior qui examine un style postmortem..." cadres, profondeur et vocabulaire.
 
-### 3. Persona + context
-"You are a senior SRE reviewing a postmortem…" frames style, depth and vocabulary.
+4. Structure et délimiteurs
+Utilisez des balises XML-ish (`<context>…</context>`, `<task>…</task>`) — les modèles les analysent de façon fiable.
 
-### 4. Structure & delimiters
-Use XML-ish tags (`<context>…</context>`, `<task>…</task>`) — models parse them reliably.
+5. Chaîne de pensée
+"Pensez pas à pas" — ou mieux : demandez explicitement à *planifier d'abord, puis répondez*.
 
-### 5. Chain-of-thought
-"Think step by step" — or better: explicitly ask to *plan first, then answer*.
+6. Sortie forcée
+Spécifier le format : schéma JSON, table de marquage, longueur exacte. Vérifier les programmes.
 
-### 6. Constrained output
-Specify format: JSON schema, markdown table, exact length. Verify programmatically.
+7. Boucle autocritique
+"Projet → critiquez votre projet → produire la finale." Une étape supplémentaire, un saut de grande qualité.
 
-### 7. Self-critique loop
-"Draft → critique your draft → produce final." One extra step, big quality jump.
+8. Utilisation des outils et RAG
+Donnez au modèle des fonctions de récupération + au lieu d'espérer qu'il le sait — le plus grand levier de fiabilité.
 
-### 8. Tool use & RAG
-Give the model retrieval + functions instead of hoping it knows — the single biggest reliability lever.
+Modes de défaillance
+- **Objectifs Vague** → sortie vague
+- **Conflicting instructions** → le modèle choisit silencieusement
+- **Assurer la certitude** sur des sujets incertains → hallucinations; préférer "dire quand vous ne savez pas"
+- **Injection rapide** — ne jamais concaténer le texte non fiable de l'utilisateur dans les appels système
 
-## ⚠️ Failure modes
-- **Vague goals** → vague output
-- **Conflicting instructions** → the model picks one silently
-- **Asking for certainty** on uncertain topics → hallucinations; prefer "say when you don't know"
-- **Prompt injection** — never concatenate untrusted user text into system prompts
+Références
+- Guide rapide anthropique · Livre de cuisine OpenAI · Guide technique rapide
+- Pratique: `ai-prompts-hub` (ceci org) — ajouter et parcourir les instructions réelles
 
-## 📚 References
-- Anthropic prompt guide · OpenAI cookbook · dair-ai Prompt Engineering Guide
-- Practice: `ai-prompts-hub` (this org) — add & browse real prompts
+Modèles avancés
 
-## 🧬 Advanced patterns
+La chaîne de vérification (CoVe)
+1. Projet de réponse → 2. Générer des questions de vérification → 3. Réponse indépendante → 4. Réviser. Cuts hallucination dramatiquement.
 
-### Chain-of-Verification (CoVe)
-1. Draft answer → 2. Generate verification questions → 3. Answer them independently → 4. Revise. Cuts hallucination dramatically.
+L'auto-cohérence
+Échantillonner le même CoT prompt 5-10× à la température 0,7, vote la majorité de la réponse. +10-20% sur les repères de raisonnement.
 
-### Self-consistency
-Sample the same CoT prompt 5-10× at temperature 0.7, majority-vote the answer. +10-20% on reasoning benchmarks.
+### Réaction (Loi sur la raison + Loi)
+Interleave `Thought:` / `Action:` / `Observation:` — l'épine dorsale des agents utilisateurs d'outils.
 
-### ReAct (Reason + Act)
-Interleave `Thought:` / `Action:` / `Observation:` — the backbone of tool-using agents.
+#### Squelette de Thought
+D'abord générer un contour, puis répondre à chaque point *en parallèle*. Plus rapide + plus structuré.
 
-### Skeleton-of-Thought
-First generate an outline, then answer each point *in parallel*. Faster + more structured.
+Points de référence à connaître
 
-## 📏 Benchmarks worth knowing
-
-| Benchmark | Tests |
+Tests de référence
 |---|---|
-| MMLU / MMLU-Pro | Broad knowledge |
-| HumanEval / SWE-bench | Coding |
-| GSM8K / MATH | Reasoning |
-| IF-Eval | Instruction following |
-| EQ-Bench | Emotional intelligence |
+MMLU / MMLU-Pro
+HumanEval / SWE-bench
+Raisonnement
+IF-Eval Instruction suivant
+L'intelligence émotionnelle
 
-## ⚠️ Prompt-injection primer
+Première injection rapide
 
-- User input is never trusted context — delimit + instruct the model
-- Tools/RAG content can carry instructions: treat retrieved text as untrusted
-- Defense-in-depth: output validation > prompt hardening
+- L'entrée de l'utilisateur n'est jamais un contexte de confiance — délimiter + instruire le modèle
+- Les outils/RAG peuvent contenir des instructions : traiter le texte récupéré comme non fiable
+- Défense en profondeur : validation de sortie > durcissement rapide
 
 ---
 ## Contribuer
