@@ -4,73 +4,71 @@
 
 提示词工程：从零到进阶
 
-_详细内容（列表、链接、描述）以英文维护 — 以下章节为你指引。_
+□ □ □ 关
 
-## 🎯 Levels
+1. 明确指示
+Bad:"写些关于狗的东西" – 好:"为兽医网站写一个150字的段落,让主人放心麻醉".
 
-### 1. Clear instructions
-Bad: "Write something about dogs." → Good: "Write a 150-word paragraph for a vet's website reassuring owners about anesthesia."
+2. 几发子弹
+在您真正的输入前给出2-3个输入/输出示例——模型模仿模式.
 
-### 2. Few-shot
-Give 2-3 input/output examples before your real input — the model mimics the pattern.
+3. 个人a + 上下文
+"你是一个高级SRE审查 死后..." 框架风格,深度和词汇。
 
-### 3. Persona + context
-"You are a senior SRE reviewing a postmortem…" frames style, depth and vocabulary.
+4. 结构和划界人
+使用XML-ish标记(`<context>…</context>`,`<task>…</task>`)——模型可靠地剖析.
 
-### 4. Structure & delimiters
-Use XML-ish tags (`<context>…</context>`, `<task>…</task>`) — models parse them reliably.
+5. 思维链
+"一步步思考"——或更好:明确要求*先计划,然后回答*.
 
-### 5. Chain-of-thought
-"Think step by step" — or better: explicitly ask to *plan first, then answer*.
+6. 限制产出
+指定格式: JSON schema, 标记下表, 准确长度 。 程序验证。
 
-### 6. Constrained output
-Specify format: JSON schema, markdown table, exact length. Verify programmatically.
+7. 自律循环
+"草稿 评你的草稿 制作最后。" 额外一步,大质量跳跃.
 
-### 7. Self-critique loop
-"Draft → critique your draft → produce final." One extra step, big quality jump.
+8. 工具使用和RAG
+赋予模型检索+功能,而不是希望它知道——唯一最大的可靠性杠杆.
 
-### 8. Tool use & RAG
-Give the model retrieval + functions instead of hoping it knows — the single biggest reliability lever.
+# # # # 失败模式
+- ** Vague目标** − 产出模糊
+-**冲突指示** 模特悄悄挑一个
+-** 在不确定的主题上寻求确定性** 幻觉;更喜欢"当你不知道的时候说"
+- ** 快速注入**——从不将不信任的用户文本输入系统提示
 
-## ⚠️ Failure modes
-- **Vague goals** → vague output
-- **Conflicting instructions** → the model picks one silently
-- **Asking for certainty** on uncertain topics → hallucinations; prefer "say when you don't know"
-- **Prompt injection** — never concatenate untrusted user text into system prompts
+^ ^ 参考文献
+- Anthropic 即时指南 · OpenAI 烹饪手册 · dair-ai 即时工程指南
+- 练习: `ai-prompts-hub`( 此值) —— 添加浏览真实提示( B)
 
-## 📚 References
-- Anthropic prompt guide · OpenAI cookbook · dair-ai Prompt Engineering Guide
-- Practice: `ai-prompts-hub` (this org) — add & browse real prompts
+□ 高级图案
 
-## 🧬 Advanced patterns
+* 核查链(核查链)
+1. 答复草案 − 2. 3. 产生核查问题。 独立回答 – 4. 修订。 大大地切断了幻觉
 
-### Chain-of-Verification (CoVe)
-1. Draft answer → 2. Generate verification questions → 3. Answer them independently → 4. Revise. Cuts hallucination dramatically.
+* 自我统一
+在0.7温度下取样相同的 CoT 提示 5-10x, 多数投票 答案。 + 10- 20% 在推理基准上。
 
-### Self-consistency
-Sample the same CoT prompt 5-10× at temperature 0.7, majority-vote the answer. +10-20% on reasoning benchmarks.
+重新法案(Reason + Act)
+Interleave `Thought:` / `Action:` / `Observation:`——工具使用剂的骨干.
 
-### ReAct (Reason + Act)
-Interleave `Thought:` / `Action:` / `Observation:` — the backbone of tool-using agents.
+QQ 思维的摇摆
+首先生成一个大纲,然后回答每个点 * 平行 * 。 更快+更有结构化.
 
-### Skeleton-of-Thought
-First generate an outline, then answer each point *in parallel*. Faster + more structured.
+□□□□□ 基准值得知道
 
-## 📏 Benchmarks worth knowing
-
-| Benchmark | Tests |
+基准 测试 +++
 |---|---|
-| MMLU / MMLU-Pro | Broad knowledge |
-| HumanEval / SWE-bench | Coding |
-| GSM8K / MATH | Reasoning |
-| IF-Eval | Instruction following |
-| EQ-Bench | Emotional intelligence |
+MMLU / MMLU / Pro + 广泛知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 → 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽广知识 + 宽 宽 宽 宽 宽 宽 宽 宽 宽 宽 宽 宽 宽 宽 宽 宽 宽 → 宽 宽 → 宽 宽 → → 宽 宽 宽 → → 宽 宽 → → → → 宽 → 宽 → → 宽 宽 → 宽 宽 → → → → 宽 宽 → 宽 
+================================================================= ========================================================================================================================================
+* GSM8K/MATH *
+IF-Eval 遵循的指令
+EQ -Bench 情感情报
 
-## ⚠️ Prompt-injection primer
+□□□□□□□□□□□□□
 
-- User input is never trusted context — delimit + instruct the model
-- Tools/RAG content can carry instructions: treat retrieved text as untrusted
-- Defense-in-depth: output validation > prompt hardening
+- 用户输入从不可信上下文——限定+指示模型
+- 工具/RAG内容可携带指令:将检索到的文本视为不信任
+- 深入防御:输出验证 > 迅速硬化
 
 ---
 ## 贡献
