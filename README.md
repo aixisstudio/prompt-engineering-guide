@@ -71,7 +71,7 @@ First generate an outline, then answer each point *in parallel*. Faster + more s
 - Defense-in-depth: output validation > prompt hardening
 
 ---
-Maintained by [aixisstudio](https://github.com/aixisstudio) — author of [Snitch](https://github.com/aixisstudio/Snitch), the open-source application firewall.
+Maintained by [aixisstudio](https://github.com/aixisstudio) — author of [Wiretap](https://github.com/aixisstudio/Wiretap), the open-source application firewall.
 
 ## License
 
